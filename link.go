@@ -283,22 +283,10 @@ func (l *link) countUnsettled() int {
 // If a settlement mode has been explicitly set locally and it was not honored by the
 // server an error is returned.
 func (l *link) setSettleModes(resp *frames.PerformAttach) error {
-	var (
-		localRecvSettle = receiverSettleModeValue(l.ReceiverSettleMode)
-		respRecvSettle  = receiverSettleModeValue(resp.ReceiverSettleMode)
-	)
-	if l.ReceiverSettleMode != nil && localRecvSettle != respRecvSettle {
-		return fmt.Errorf("amqp: receiver settlement mode %q requested, received %q from server", l.ReceiverSettleMode, &respRecvSettle)
-	}
+	var respRecvSettle  = receiverSettleModeValue(resp.ReceiverSettleMode)
 	l.ReceiverSettleMode = &respRecvSettle
 
-	var (
-		localSendSettle = senderSettleModeValue(l.SenderSettleMode)
-		respSendSettle  = senderSettleModeValue(resp.SenderSettleMode)
-	)
-	if l.SenderSettleMode != nil && localSendSettle != respSendSettle {
-		return fmt.Errorf("amqp: sender settlement mode %q requested, received %q from server", l.SenderSettleMode, &respSendSettle)
-	}
+	var respSendSettle  = senderSettleModeValue(resp.SenderSettleMode)
 	l.SenderSettleMode = &respSendSettle
 
 	return nil
