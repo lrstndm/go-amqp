@@ -108,7 +108,6 @@ func (s *Session) NewReceiver(opts ...LinkOption) (*Receiver, error) {
 	if r.batching {
 		// buffer dispositions chan to prevent disposition sends from blocking
 		r.dispositions = make(chan messageDisposition, r.maxCredit)
-		go r.dispositionBatcher()
 	}
 
 	return r, nil
